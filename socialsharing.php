@@ -38,7 +38,7 @@ class SocialSharing extends Module
 		$this->author = 'PrestaShop';
 		$this->tab = 'advertising_marketing';
 		$this->need_instance = 0;
-		$this->version = '1.1';
+		$this->version = '1.2';
 		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 
@@ -46,6 +46,7 @@ class SocialSharing extends Module
 
 		$this->displayName = $this->l('Social sharing');
 		$this->description = $this->l('Displays social sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.');
+		$this->ps_versions_compliancy = array('min' => '1.5.6.1', 'max' => _PS_VERSION_);
 	}
 
 	public function install()
