@@ -43,7 +43,8 @@
 			</button>
 		{/if}
 		{if $PS_SC_PINTEREST}
-			<button type="button" class="btn btn-default btn-pinterest" onclick="socialsharing_pinterest_click();">
+			{assign var="product_image_id" value=$product->getCover($product->id)}
+			<button type="button" class="btn btn-default btn-pinterest" onclick="socialsharing_pinterest_click('{$link->getImageLink($product->link_rewrite, $product_image_id['id_image'], 'thickbox_default')}');">
 				<i class="icon-pinterest"></i> Pinterest
 				<!-- <img src="{$link->getMediaLink("`$module_dir`img/pinterest.gif")}" alt="Pinterest" /> -->
 			</button>

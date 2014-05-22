@@ -39,7 +39,7 @@ function socialsharing_google_click(message)
 	window.open('https://plus.google.com/share?url=' + encodeURIComponent(location.href), 'sharergplus', 'toolbar=0,status=0,width=660,height=445');
 }
 
-function socialsharing_pinterest_click(message)
+function socialsharing_pinterest_click(image_url)
 {
-	window.open('http://www.pinterest.com/pin/create/button/?url=' + encodeURIComponent(location.href), 'sharerpinterest', 'toolbar=0,status=0,width=660,height=445');
+	window.open('http://www.pinterest.com/pin/create/button/?media=' + encodeURIComponent(image_url) + '&url=' + encodeURIComponent(location.href), 'sharerpinterest', 'toolbar=0,status=0,width=660,height=445');
 }
