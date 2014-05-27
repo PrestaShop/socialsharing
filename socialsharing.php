@@ -99,8 +99,8 @@ class SocialSharing extends Module
 			foreach (self::$networks as $network)
 				Configuration::updateValue('PS_SC_'.Tools::strtoupper($network), (int)Tools::getValue('PS_SC_'.Tools::strtoupper($network)));
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
-			$this->_clearCache('socialsharing.tpl');
-			$this->_clearCache('socialsharing_compare.tpl');
+			Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath('socialsharing.tpl'));
+			Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath('socialsharing_compare.tpl'));
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true).'&conf=6&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name);
 
 		}
