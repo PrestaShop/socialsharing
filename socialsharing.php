@@ -173,6 +173,7 @@ class SocialSharing extends Module
 
 	protected function displaySocialSharing()
 	{
+		$product = $this->context->controller->getProduct();
 		if (!$this->isCached('socialsharing.tpl', $this->getCacheId('socialsharing|'.(int)$product->id)))
 		{
 			$this->context->smarty->assign(array(
