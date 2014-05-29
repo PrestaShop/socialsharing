@@ -46,7 +46,7 @@ class SocialSharing extends Module
 
 		$this->displayName = $this->l('Social sharing');
 		$this->description = $this->l('Displays social sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.');
-	}
+	}hookDisplayHeader
 
 	public function install()
 	{
@@ -163,6 +163,7 @@ class SocialSharing extends Module
 		if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(int)$product->id)))
 		{
 			$this->context->smarty->assign(array(
+				'product' => $product,
 				'cover' => Product::getCover($product->id),
 				'link_rewrite' => $product->link_rewrite,
 			));
