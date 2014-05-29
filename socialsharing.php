@@ -163,7 +163,6 @@ class SocialSharing extends Module
 		if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(int)$product->id)))
 		{
 			$this->context->smarty->assign(array(
-				'product' => $product,
 				'cover' => Product::getCover($product->id),
 				'link_rewrite' => $product->link_rewrite,
 			));
@@ -174,7 +173,7 @@ class SocialSharing extends Module
 
 	protected function displaySocialSharing()
 	{
-		if (!$this->isCached('socialsharing.tpl', $this->getCacheId()))
+		if (!$this->isCached('socialsharing.tpl', $this->getCacheId('socialsharing|'.(int)$product->id)))
 		{
 			$this->context->smarty->assign(array(
 				'product' => $this->context->controller->getProduct(),
@@ -185,7 +184,7 @@ class SocialSharing extends Module
 			));
 		}
 
-		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId());
+		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId('socialsharing|'.(int)$product->id));
 	}
 
 	protected function clearProductHeaderCache($id_product)
