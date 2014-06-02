@@ -27,7 +27,7 @@
 		<p>{l s="Share this comparison with your friends:" mod='socialsharing'}</p>
 		<p class="socialsharing_product">
 			{if $PS_SC_TWITTER}
-				<button type="button" class="btn btn-default btn-block btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|addslashes} {$link->getProductLink($product)|addslashes}'{/if});">
+				<button type="button" class="btn btn-default btn-block btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|escape:'htmlall':'UTF-8':'js=1'} {$link->getProductLink($product)|addslashes}'{/if});">
 					<i class="icon-twitter"></i> Tweet
 				</button>
 			{/if}
@@ -42,7 +42,8 @@
 				</button>
 			{/if}
 			{if $PS_SC_PINTEREST}
-				<button type="button" class="btn btn-default btn-block btn-pinterest" onclick="socialsharing_pinterest_click();">
+				{assign var="product_image_id" value=$product->getCover($product->id)}
+				<button type="button" class="btn btn-default btn-pinterest" onclick="socialsharing_pinterest_click('{$link->getImageLink($product->link_rewrite, $product_image_id['id_image'], 'thickbox_default')}');">
 					<i class="icon-pinterest"></i> Pinterest
 				</button>
 			{/if}

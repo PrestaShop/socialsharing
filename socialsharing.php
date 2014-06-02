@@ -38,7 +38,7 @@ class SocialSharing extends Module
 		$this->author = 'PrestaShop';
 		$this->tab = 'advertising_marketing';
 		$this->need_instance = 0;
-		$this->version = '1.2.1';
+		$this->version = '1.2.2';
 		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 
@@ -99,8 +99,8 @@ class SocialSharing extends Module
 			foreach (self::$networks as $network)
 				Configuration::updateValue('PS_SC_'.Tools::strtoupper($network), (int)Tools::getValue('PS_SC_'.Tools::strtoupper($network)));
 			$this->html .= $this->displayConfirmation($this->l('Settings updated'));
-			$this->_clearCache('socialsharing.tpl');
-			$this->_clearCache('socialsharing_compare.tpl');
+			Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath('socialsharing.tpl'));
+			Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath('socialsharing_compare.tpl'));
 			Tools::redirectAdmin($this->context->link->getAdminLink('AdminModules', true).'&conf=6&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name);
 
 		}
@@ -173,7 +173,7 @@ class SocialSharing extends Module
 
 	protected function displaySocialSharing()
 	{
-		if (!$this->isCached('socialsharing.tpl', $this->getCacheId()))
+		if (!$this->isCached('socialsharing.tpl', $this->getCacheId($this->context->controller->getProduct()->id)))
 		{
 			$this->context->smarty->assign(array(
 				'product' => $this->context->controller->getProduct(),
@@ -184,7 +184,7 @@ class SocialSharing extends Module
 			));
 		}
 
-		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId());
+		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId($this->getCacheId($this->context->controller->getProduct()->id)));
 	}
 
 	protected function clearProductHeaderCache($id_product)
