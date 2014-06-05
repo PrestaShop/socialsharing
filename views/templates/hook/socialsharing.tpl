@@ -26,26 +26,26 @@
 	<p class="socialsharing_product list-inline no-print">
 		{if $PS_SC_TWITTER}
 			<button type="button" class="btn btn-default btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|escape:'htmlall':'UTF-8':'js=1'} {$link->getProductLink($product)|addslashes}'{/if});">
-				<i class="icon-twitter"></i> Tweet
+				<i class="icon-twitter"></i> {l s="Tweet" mod='socialsharing'}
 				<!-- <img src="{$link->getMediaLink("`$module_dir`img/twitter.gif")}" alt="Tweet" /> -->
 			</button>
 		{/if}
 		{if $PS_SC_FACEBOOK}
 			<button type="button" class="btn btn-default btn-facebook" onclick="socialsharing_facebook_click();">
-				<i class="icon-facebook"></i> Share
+				<i class="icon-facebook"></i> {l s="Share" mod='socialsharing'}
 				<!-- <img src="{$link->getMediaLink("`$module_dir`img/facebook.gif")}" alt="Facebook Like" /> -->
 			</button>
 		{/if}
 		{if $PS_SC_GOOGLE}
 			<button type="button" class="btn btn-default btn-google-plus" onclick="socialsharing_google_click();">
-				<i class="icon-google-plus"></i> Google+
+				<i class="icon-google-plus"></i> {l s="Google+" mod='socialsharing'}
 				<!-- <img src="{$link->getMediaLink("`$module_dir`img/google.gif")}" alt="Google Plus" /> -->
 			</button>
 		{/if}
 		{if $PS_SC_PINTEREST}
 			{assign var="product_image_id" value=$product->getCover($product->id)}
 			<button type="button" class="btn btn-default btn-pinterest" onclick="socialsharing_pinterest_click('{$link->getImageLink($product->link_rewrite, $product_image_id['id_image'], 'thickbox_default')}');">
-				<i class="icon-pinterest"></i> Pinterest
+				<i class="icon-pinterest"></i> {l s="Pinterest" mod='socialsharing'}
 				<!-- <img src="{$link->getMediaLink("`$module_dir`img/pinterest.gif")}" alt="Pinterest" /> -->
 			</button>
 		{/if}
