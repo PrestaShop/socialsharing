@@ -28,22 +28,22 @@
 		<p class="socialsharing_product">
 			{if $PS_SC_TWITTER}
 				<button type="button" class="btn btn-default btn-block btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|escape:'htmlall':'UTF-8':'js=1'} {$link->getProductLink($product)|addslashes}'{/if});">
-					<i class="icon-twitter"></i> Tweet
+					<i class="icon-twitter"></i> {l s="Tweet" mod='socialsharing'}
 				</button>
 			{/if}
 			{if $PS_SC_FACEBOOK}
 				<button type="button" class="btn btn-default btn-block btn-facebook" onclick="socialsharing_facebook_click();">
-					<i class="icon-facebook"></i> Share
+					<i class="icon-facebook"></i> {l s="Share" mod='socialsharing'}
 				</button>
 			{/if}
 			{if $PS_SC_GOOGLE}
 				<button type="button" class="btn btn-default btn-block btn-google-plus" onclick="socialsharing_google_click();">
-					<i class="icon-google-plus"></i> Google+
+					<i class="icon-google-plus"></i> {l s="Google+" mod='socialsharing'}
 				</button>
 			{/if}
 			{if $PS_SC_PINTEREST}
 				<button type="button" class="btn btn-default btn-block btn-pinterest" onclick="socialsharing_pinterest_click('{$logo_url}');">
-  					<i class="icon-pinterest"></i> Pinterest
+  					<i class="icon-pinterest"></i> {l s="Pinterest" mod='socialsharing'}
   				</button>
 			{/if}
 		</p>
