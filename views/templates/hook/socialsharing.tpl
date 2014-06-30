@@ -25,7 +25,7 @@
 {if $PS_SC_TWITTER || $PS_SC_FACEBOOK || $PS_SC_GOOGLE || $PS_SC_PINTEREST}
 	<p class="socialsharing_product list-inline no-print">
 		{if $PS_SC_TWITTER}
-			<button type="button" class="btn btn-default btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|escape:'htmlall':'UTF-8':'js=1'} {$link->getProductLink($product)|addslashes}'{/if});">
+			<button type="button" class="btn btn-default btn-twitter" onclick="socialsharing_twitter_click({if isset($product)}'{$product->name|addslashes|escape:'html':'UTF-8'} {$link->getProductLink($product)|addslashes}'{/if});">
 				<i class="icon-twitter"></i> {l s="Tweet" mod='socialsharing'}
 				<!-- <img src="{$link->getMediaLink("`$module_dir`img/twitter.gif")}" alt="Tweet" /> -->
 			</button>
