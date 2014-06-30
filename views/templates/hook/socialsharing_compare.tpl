@@ -26,7 +26,7 @@
 	<div id="social-share-compare">
 		<p>{l s="Share this comparison with your friends:" mod='socialsharing'}</p>
 		<p class="socialsharing_product">
-			{if $PS_SC_TWITTER}
+		{if $PS_SC_TWITTER}
 			<button data-type="twitter" type="button" class="btn btn-default btn-twitter social-sharing">
 				<i class="icon-twitter"></i> {l s="Tweet" mod='socialsharing'}
 			</button>
