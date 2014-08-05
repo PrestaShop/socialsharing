@@ -200,6 +200,35 @@ class SocialSharing extends Module
 		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId('socialsharing|'.(int)$product->id));
 	}
 
+	protected function displayExtraLeft()
+	{
+		$product = $this->context->controller->getProduct();
+	
+		$image_cover_id = $product->getCover($product->id);
+		if (is_array($image_cover_id) && isset($image_cover_id['id_image']))
+			$image_cover_id = (int)$image_cover_id['id_image'];
+		else
+			$image_cover_id = 0;
+
+		Media::addJsDef(array(	'sharing_name' => addcslashes($product->name, "'"),
+								'sharing_url' => addcslashes($this->context->link->getProductLink($product), "'"),
+								'sharing_img' => addcslashes($this->context->link->getImageLink($product->link_rewrite, $image_cover_id), "'")
+							));
+
+		if (!$this->isCached('extraleft.tpl', $this->getCacheId('extraleft|'.(int)$product->id)))
+		{
+			$this->context->smarty->assign(array(
+				'product' => $product,
+				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
+				'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
+				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
+				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
+			));
+		}
+
+		return $this->display(__FILE__, 'extraleft.tpl', $this->getCacheId('extraleft|'.(int)$product->id));
+	}
+
 	protected function clearProductHeaderCache($id_product)
 	{
 		return $this->_clearCache('socialsharing_header.tpl', 'socialsharing_header|'.(int)$id_product);
@@ -231,9 +260,9 @@ class SocialSharing extends Module
 		return $this->displaySocialSharing();
 	}
 
-	public function hookExtraleft($params)
+	public function hookDisplayLeftColumnProduct($params)
 	{
-		return $this->displaySocialSharing();
+		return $this->displayExtraLeft();
 	}
 
 	public function hookProductActions($params)
