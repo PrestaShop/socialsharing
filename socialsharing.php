@@ -38,7 +38,7 @@ class SocialSharing extends Module
 		$this->author = 'PrestaShop';
 		$this->tab = 'advertising_marketing';
 		$this->need_instance = 0;
-		$this->version = '1.2.6';
+		$this->version = '1.2.7';
 		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 
@@ -174,6 +174,18 @@ class SocialSharing extends Module
 	protected function displaySocialSharing()
 	{
 		$product = $this->context->controller->getProduct();
+	
+		$image_cover_id = $product->getCover($product->id);
+		if (is_array($image_cover_id) && isset($image_cover_id['id_image']))
+			$image_cover_id = (int)$image_cover_id['id_image'];
+		else
+			$image_cover_id = 0;
+
+		Media::addJsDef(array(	'sharing_name' => addcslashes($product->name, "'"),
+								'sharing_url' => addcslashes($this->context->link->getProductLink($product), "'"),
+								'sharing_img' => addcslashes($this->context->link->getImageLink($product->link_rewrite, $image_cover_id), "'")
+							));
+
 		if (!$this->isCached('socialsharing.tpl', $this->getCacheId('socialsharing|'.(int)$product->id)))
 		{
 			$this->context->smarty->assign(array(
@@ -195,6 +207,12 @@ class SocialSharing extends Module
 
 	public function hookDisplayCompareExtraInformation($params)
 	{
+		Media::addJsDef(array(	'sharing_name' => addcslashes($this->l('Product comparision'), "'"),
+								'sharing_url' => addcslashes($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, 
+																		array('compare_product_list' => Tools::getValue('compare_product_list'))), "'"),
+								'sharing_img' => addcslashes(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $this->context->shop->id), "'")
+						));
+
 		if (!$this->isCached('socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare')))
 		{
 			$this->context->smarty->assign(array(
