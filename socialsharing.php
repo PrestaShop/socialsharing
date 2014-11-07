@@ -160,36 +160,39 @@ class SocialSharing extends Module
 			return;
 
 		$product = $this->context->controller->getProduct();
-		if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(int)$product->id)))
+		if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : ''))))
 		{
 			$this->context->smarty->assign(array(
 				'cover' => Product::getCover($product->id),
-				'link_rewrite' => $product->link_rewrite,
+				'link_rewrite' => isset($product->link_rewrite) && $product->link_rewrite ? $product->link_rewrite : '',
 			));
 		}
 
-		return $this->display(__FILE__, 'socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(int)$product->id));
+		return $this->display(__FILE__, 'socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : '')));
 	}
 
 	protected function displaySocialSharing()
 	{
 		$product = $this->context->controller->getProduct();
-	
-		$image_cover_id = $product->getCover($product->id);
-		if (is_array($image_cover_id) && isset($image_cover_id['id_image']))
-			$image_cover_id = (int)$image_cover_id['id_image'];
-		else
-			$image_cover_id = 0;
+		if (isset($product) && Validate::isLoadedObject($product))
+		{
+			$image_cover_id = $product->getCover($product->id);
+			if (is_array($image_cover_id) && isset($image_cover_id['id_image']))
+				$image_cover_id = (int)$image_cover_id['id_image'];
+			else
+				$image_cover_id = 0;
 
-		Media::addJsDef(array(	'sharing_name' => addcslashes($product->name, "'"),
-								'sharing_url' => addcslashes($this->context->link->getProductLink($product), "'"),
-								'sharing_img' => addcslashes($this->context->link->getImageLink($product->link_rewrite, $image_cover_id), "'")
-							));
+			Media::addJsDef(array(
+				'sharing_name' => addcslashes($product->name, "'"),
+				'sharing_url' => addcslashes($this->context->link->getProductLink($product), "'"),
+				'sharing_img' => addcslashes($this->context->link->getImageLink($product->link_rewrite, $image_cover_id), "'")
+			));
+		}
 
-		if (!$this->isCached('socialsharing.tpl', $this->getCacheId('socialsharing|'.(int)$product->id)))
+		if (!$this->isCached('socialsharing.tpl', $this->getCacheId('socialsharing|'.(isset($product->id) && $product->id ? (int)$product->id : ''))))
 		{
 			$this->context->smarty->assign(array(
-				'product' => $product,
+				'product' => isset($product) ? $product : '',
 				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
 				'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
 				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
@@ -197,7 +200,7 @@ class SocialSharing extends Module
 			));
 		}
 
-		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId('socialsharing|'.(int)$product->id));
+		return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId('socialsharing|'.(isset($product->id) && $product->id ? (int)$product->id : '')));
 	}
 
 	protected function clearProductHeaderCache($id_product)
@@ -207,11 +210,13 @@ class SocialSharing extends Module
 
 	public function hookDisplayCompareExtraInformation($params)
 	{
-		Media::addJsDef(array(	'sharing_name' => addcslashes($this->l('Product comparision'), "'"),
-								'sharing_url' => addcslashes($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, 
-																		array('compare_product_list' => Tools::getValue('compare_product_list'))), "'"),
-								'sharing_img' => addcslashes(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $this->context->shop->id), "'")
-						));
+		Media::addJsDef(array(
+			'sharing_name' => addcslashes($this->l('Product comparision'), "'"),
+			'sharing_url' => addcslashes($this->context->link->getPageLink('products-comparison', null, $this->context->language->id,
+			array('compare_product_list' => Tools::getValue('compare_product_list'))), "'"),
+			'sharing_img' => addcslashes(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $this->context->shop->id), "'"
+			)
+		));
 
 		if (!$this->isCached('socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare')))
 		{
