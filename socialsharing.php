@@ -211,7 +211,7 @@ class SocialSharing extends Module
 	public function hookDisplayCompareExtraInformation($params)
 	{
 		Media::addJsDef(array(
-			'sharing_name' => addcslashes($this->l('Product comparision'), "'"),
+			'sharing_name' => addcslashes($this->l('Product comparison'), "'"),
 			'sharing_url' => addcslashes($this->context->link->getPageLink('products-comparison', null, $this->context->language->id,
 			array('compare_product_list' => Tools::getValue('compare_product_list'))), "'"),
 			'sharing_img' => addcslashes(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $this->context->shop->id), "'"
