@@ -163,7 +163,7 @@ class SocialSharing extends Module
 		if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : ''))))
 		{
 			$this->context->smarty->assign(array(
-				'cover' => Product::getCover($product->id),
+				'cover' => isset($product->id) ? Product::getCover((int)$product->id) : '',
 				'link_rewrite' => isset($product->link_rewrite) && $product->link_rewrite ? $product->link_rewrite : '',
 			));
 		}
