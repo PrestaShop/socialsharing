@@ -236,9 +236,9 @@ class SocialSharing extends Module
 		return $this->displaySocialSharing();
 	}
 
-	public function hookExtraleft($params)
+	public function hookDisplayLeftColumnProduct($params)
 	{
-		return $this->displaySocialSharing();
+		return '<li>'.$this->displaySocialSharing().'</li>';
 	}
 
 	public function hookProductActions($params)
