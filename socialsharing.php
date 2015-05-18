@@ -79,7 +79,7 @@ class SocialSharing extends Module
 		// The module will then be hooked on the product and comparison pages
 		$this->registerHook('displayRightColumnProduct');
 		$this->registerHook('displayCompareExtraInformation');
-		
+
 		// The module will then be hooked and accessible with Smarty function
 		$this->registerHook('displaySocialSharing');
 
@@ -166,8 +166,8 @@ class SocialSharing extends Module
 		if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : ''))))
 		{
 			$this->context->smarty->assign(array(
-				'price' => Tools::ps_round($product->getPrice(!Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer), null), _PS_PRICE_COMPUTE_PRECISION_),
-				'pretax_price' => Tools::ps_round($product->getPrice(false, null), _PS_PRICE_COMPUTE_PRECISION_),
+				'price' => Tools::ps_round($product->getPrice(!Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer), null)),
+				'pretax_price' => Tools::ps_round($product->getPrice(false, null)),
 				'weight' => $product->weight,
 				'weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
 				'cover' => isset($product->id) ? Product::getCover((int)$product->id) : '',
