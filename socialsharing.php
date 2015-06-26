@@ -190,7 +190,7 @@ class SocialSharing extends Module
 				$image_cover_id = 0;
 
 			Media::addJsDef(array(
-				'sharing_name' => addcslashes($product->name, "'"),
+				'sharing_name' => addcslashes(str_replace("\n",'',$product->name) , "'"),
 				'sharing_url' => addcslashes($this->context->link->getProductLink($product), "'"),
 				'sharing_img' => addcslashes($this->context->link->getImageLink($product->link_rewrite, $image_cover_id), "'")
 			));
