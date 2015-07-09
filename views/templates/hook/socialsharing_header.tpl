@@ -38,3 +38,12 @@
 <meta property="product:weight:value" content="{$weight}" /> 
 <meta property="product:weight:units" content="{$weight_unit}" /> 
 {/if}
+{if isset($price) && ($price != 0)}
+<meta name="twitter:card" content="product" />
+<meta name="twitter:data1" content="{$price}">
+<meta name="twitter:label1" content="Prix">
+<meta name="twitter:data2" content="{$currency->iso_code}">
+<meta name="twitter:label2" content="Devise">
+<meta property="og:price:amount" content="{$price}" />
+<meta property="og:price:currency" content="{$currency->iso_code}" />
+{/if}
