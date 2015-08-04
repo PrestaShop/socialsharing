@@ -79,7 +79,7 @@ class SocialSharing extends Module
 		// The module will then be hooked on the product and comparison pages
 		$this->registerHook('displayRightColumnProduct');
 		$this->registerHook('displayCompareExtraInformation');
-		
+
 		// The module will then be hooked and accessible with Smarty function
 		$this->registerHook('displaySocialSharing');
 
@@ -158,11 +158,12 @@ class SocialSharing extends Module
 		$this->context->controller->addCss($this->_path.'css/socialsharing.css');
 		$this->context->controller->addJS($this->_path.'js/socialsharing.js');
 
-		// Exception are managed with Module::registerExceptions() but this is needed in case the merchant added new controllers afterwards
-		if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'product')
-			return;
-
 		$product = $this->context->controller->getProduct();
+
+		if (!Validate::isLoadedObject($product)) {
+			return;
+		}
+
 		if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : ''))))
 		{
 			$this->context->smarty->assign(array(
