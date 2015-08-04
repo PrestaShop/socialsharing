@@ -40,7 +40,11 @@ $(document).ready(function(){
 					window.open('https://plus.google.com/share?url=' + sharing_url, 'sharer', 'toolbar=0,status=0,width=660,height=445');
 					break;
 				case 'pinterest':
-					window.open('http://www.pinterest.com/pin/create/button/?media=' + sharing_img + '&url=' + sharing_url, 'sharerpinterest', 'toolbar=0,status=0,width=660,height=445');
+					var img_url = sharing_img;
+					if (typeof $("#bigpic").attr('src') != 'undefined' && $("#bigpic").attr('src') != '') {
+						img_url = $("#bigpic").attr('src');
+					}
+					window.open('http://www.pinterest.com/pin/create/button/?media=' + img_url + '&url=' + sharing_url, 'sharerpinterest', 'toolbar=0,status=0,width=660,height=445');
 					break;
 			}
 		}
