@@ -38,7 +38,7 @@ class SocialSharing extends Module
 		$this->author = 'PrestaShop';
 		$this->tab = 'advertising_marketing';
 		$this->need_instance = 0;
-		$this->version = '1.3.1';
+		$this->version = '1.4.0';
 		$this->bootstrap = true;
 		$this->_directory = dirname(__FILE__);
 
