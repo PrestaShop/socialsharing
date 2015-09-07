@@ -159,6 +159,9 @@ class SocialSharing extends Module
 		$this->context->controller->addCss($this->_path.'css/socialsharing.css');
 		$this->context->controller->addJS($this->_path.'js/socialsharing.js');
 
+		if (!isset($this->context->controller->php_self) || !in_array($this->context->controller->php_self, array('product')))
+			return;
+
 		$product = $this->context->controller->getProduct();
 
 		if (!Validate::isLoadedObject($product)) {
