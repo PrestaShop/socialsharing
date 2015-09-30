@@ -183,7 +183,12 @@ class SocialSharing extends Module
 
 	public function hookDisplaySocialSharing()
 	{
+		if (!isset($this->context->controller) || !method_exists($this->context->controller, 'getProduct')) {
+			return;
+		}
+
 		$product = $this->context->controller->getProduct();
+
 		if (isset($product) && Validate::isLoadedObject($product))
 		{
 			$image_cover_id = $product->getCover($product->id);
