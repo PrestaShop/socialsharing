@@ -28,7 +28,9 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-class Socialsharing extends Module
+use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
+
+class Socialsharing extends Module implements WidgetInterface
 {
     protected static $networks = array('Facebook', 'Twitter', 'Google', 'Pinterest');
     protected $html = '';
@@ -39,7 +41,8 @@ class Socialsharing extends Module
         $this->author = 'PrestaShop';
         $this->tab = 'advertising_marketing';
         $this->need_instance = 0;
-        $this->version = '1.4.1';
+        $this->version = '2.0';
+        $this->ps_versions_compliancy = array('min' => '1.7', 'max' => _PS_VERSION_);
         $this->bootstrap = true;
         $this->_directory = dirname(__FILE__);
 
@@ -51,41 +54,11 @@ class Socialsharing extends Module
 
     public function install()
     {
-        if (!parent::install()) {
-            return false;
-        }
-
-        // Activate every option by default
-        Configuration::updateValue('PS_SC_TWITTER', 1);
-        Configuration::updateValue('PS_SC_FACEBOOK', 1);
-        Configuration::updateValue('PS_SC_GOOGLE', 1);
-        Configuration::updateValue('PS_SC_PINTEREST', 1);
-
-        // The module will add a meta in the product page header and add a javascript file
-        $this->registerHook('header');
-
-        // This hook could have been called only from the product page, but it's better to add the JS in all the pages with CCC
-        /*
-            $id_hook_header = Hook::getIdByName('header');
-            $pages = array();
-            foreach (Meta::getPages() as $page)
-                if ($page != 'product')
-                    $pages[] = $page;
-            $this->registerExceptions($id_hook_header, $pages);
-        */
-
-        // The module need to clear the product page cache after update/delete
-        $this->registerHook('actionObjectProductUpdateAfter');
-        $this->registerHook('actionObjectProductDeleteAfter');
-
-        // The module will then be hooked on the product and comparison pages
-        $this->registerHook('displayRightColumnProduct');
-        $this->registerHook('displayCompareExtraInformation');
-
-        // The module will then be hooked and accessible with Smarty function
-        $this->registerHook('displaySocialSharing');
-
-        return true;
+        return (parent::install() &&
+            Configuration::updateValue('PS_SC_TWITTER', 1) &&
+            Configuration::updateValue('PS_SC_FACEBOOK', 1) &&
+            Configuration::updateValue('PS_SC_GOOGLE', 1) &&
+            Configuration::updateValue('PS_SC_PINTEREST', 1));
     }
 
     public function getConfigFieldsValues()
@@ -153,126 +126,71 @@ class Socialsharing extends Module
         ));
     }
 
-    public function hookDisplayHeader($params)
-    {
-        if (!isset($this->context->controller->php_self) || !in_array($this->context->controller->php_self, array('product', 'products-comparison'))) {
-            return;
-        }
+	public function renderWidget($hookName, array $params)
+	{
+		$this->smarty->assign($this->getWidgetVariables($hookName, $params));
+		return $this->display(__FILE__, 'socialsharing.tpl');
+	}
 
-        $this->context->controller->addCss($this->_path.'css/socialsharing.css');
-        $this->context->controller->addJS($this->_path.'js/socialsharing.js');
-
-        if ($this->context->controller->php_self == 'product') {
-            $product = $this->context->controller->getProduct();
-
-            if (!Validate::isLoadedObject($product)) {
-                return;
-            }
-            if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : '')))) {
-                $this->context->smarty->assign(array(
-                    'price' => Tools::ps_round($product->getPrice(!Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer), null), _PS_PRICE_COMPUTE_PRECISION_),
-                    'pretax_price' => Tools::ps_round($product->getPrice(false, null), _PS_PRICE_COMPUTE_PRECISION_),
-                    'weight' => $product->weight,
-                    'weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
-                    'cover' => isset($product->id) ? Product::getCover((int)$product->id) : '',
-                    'link_rewrite' => isset($product->link_rewrite) && $product->link_rewrite ? $product->link_rewrite : '',
-                ));
-            }
-        }
-
-        return $this->display(__FILE__, 'socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : '')));
-    }
-
-    public function hookDisplaySocialSharing()
-    {
-        if (!isset($this->context->controller) || !method_exists($this->context->controller, 'getProduct')) {
+	public function getWidgetVariables($hookName, array $params)
+	{
+        if (!isset($this->context->controller->php_self) || $this->context->controller->php_self != 'product') {
             return;
         }
 
         $product = $this->context->controller->getProduct();
 
-        if (isset($product) && Validate::isLoadedObject($product)) {
-            $image_cover_id = $product->getCover($product->id);
-            if (is_array($image_cover_id) && isset($image_cover_id['id_image'])) {
-                $image_cover_id = (int)$image_cover_id['id_image'];
-            } else {
-                $image_cover_id = 0;
-            }
-
-            Media::addJsDef(array(
-                'sharing_name' => addcslashes($product->name, "'"),
-                'sharing_url' => addcslashes($this->context->link->getProductLink($product), "'"),
-                'sharing_img' => addcslashes($this->context->link->getImageLink($product->link_rewrite, $image_cover_id), "'")
-            ));
+        if (!Validate::isLoadedObject($product)) {
+            return;
         }
 
-        if (!$this->isCached('socialsharing.tpl', $this->getCacheId('socialsharing|'.(isset($product->id) && $product->id ? (int)$product->id : '')))) {
-            $this->context->smarty->assign(array(
-                'product' => isset($product) ? $product : '',
-                'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
-                'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
-                'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
-                'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
-            ));
+        $social_share_links = [];
+        $sharing_url = addcslashes($this->context->link->getProductLink($product), "'");
+        $sharing_name = addcslashes($product->name, "'");
+
+        $image_cover_id = $product->getCover($product->id);
+        if (is_array($image_cover_id) && isset($image_cover_id['id_image'])) {
+            $image_cover_id = (int)$image_cover_id['id_image'];
+        } else {
+            $image_cover_id = 0;
         }
 
-        return $this->display(__FILE__, 'socialsharing.tpl', $this->getCacheId('socialsharing|'.(isset($product->id) && $product->id ? (int)$product->id : '')));
-    }
+        $sharing_img = addcslashes($this->context->link->getImageLink($product->link_rewrite, $image_cover_id), "'");
 
-    protected function clearProductHeaderCache($id_product)
-    {
-        return $this->_clearCache('socialsharing_header.tpl', 'socialsharing_header|'.(int)$id_product);
-    }
-
-    public function hookDisplayCompareExtraInformation($params)
-    {
-        Media::addJsDef(array(
-            'sharing_name' => addcslashes($this->l('Product comparison'), "'"),
-            'sharing_url' => addcslashes($this->context->link->getPageLink('products-comparison', null, $this->context->language->id,
-            array('compare_product_list' => Tools::getValue('compare_product_list'))), "'"),
-            'sharing_img' => addcslashes(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MAIL', null, null, $this->context->shop->id), "'"
-            )
-        ));
-
-        if (!$this->isCached('socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare'))) {
-            $this->context->smarty->assign(array(
-                'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
-                'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
-                'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
-                'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
-            ));
+        if (Configuration::get('PS_SC_FACEBOOK')) {
+            $social_share_links['facebook'] = [
+                'label' => $this->l('Share'),
+                'class' => 'facebook',
+                'url' => 'http://www.facebook.com/sharer.php?u='.$sharing_url,
+            ];
         }
 
-        return $this->display(__FILE__, 'socialsharing_compare.tpl', $this->getCacheId('socialsharing_compare'));
-    }
+        if (Configuration::get('PS_SC_TWITTER')) {
+            $social_share_links['twitter'] = [
+                'label' => $this->l('Tweet'),
+                'class' => 'twitter',
+                'url' => 'https://twitter.com/intent/tweet?text='.$sharing_name.' '.$sharing_url,
+            ];
+        }
 
-    public function hookDisplayRightColumnProduct($params)
-    {
-        return $this->hookDisplaySocialSharing();
-    }
+        if (Configuration::get('PS_SC_GOOGLE')) {
+            $social_share_links['googleplus'] = [
+                'label' => $this->l('Google+'),
+                'class' => 'googleplus',
+                'url' => 'https://plus.google.com/share?url='.$sharing_url,
+            ];
+        }
 
-    public function hookExtraleft($params)
-    {
-        return $this->hookDisplaySocialSharing();
-    }
+        if (Configuration::get('PS_SC_PINTEREST')) {
+            $social_share_links['pinterest'] = [
+                'label' => $this->l('Pinterest'),
+                'class' => 'pinterest',
+                'url' => 'http://www.pinterest.com/pin/create/button/?media='.$sharing_img.'&url='.$sharing_url,
+            ];
+        }
 
-    public function hookProductActions($params)
-    {
-        return $this->hookDisplaySocialSharing();
-    }
-
-    public function hookProductFooter($params)
-    {
-        return $this->hookDisplaySocialSharing();
-    }
-
-    public function hookActionObjectProductUpdateAfter($params)
-    {
-        return $this->clearProductHeaderCache($params['object']->id);
-    }
-
-    public function hookActionObjectProductDeleteAfter($params)
-    {
-        return $this->clearProductHeaderCache($params['object']->id);
-    }
+        return [
+            'social_share_links' => $social_share_links,
+        ];
+	}
 }
