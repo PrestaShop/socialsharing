@@ -167,9 +167,14 @@ class SocialSharing extends Module
 			}
 			if (!$this->isCached('socialsharing_header.tpl', $this->getCacheId('socialsharing_header|'.(isset($product->id) && $product->id ? (int)$product->id : ''))))
 			{
+				if (!defined('_PS_PRICE_COMPUTE_PRECISION_')) {
+					$compute_precision = 0;
+				} else {
+					$compute_precision = (float)constant('_PS_PRICE_COMPUTE_PRECISION_');
+				}
 				$this->context->smarty->assign(array(
-					'price' => Tools::ps_round($product->getPrice(!Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer), null), _PS_PRICE_COMPUTE_PRECISION_),
-					'pretax_price' => Tools::ps_round($product->getPrice(false, null), _PS_PRICE_COMPUTE_PRECISION_),
+					'price' => Tools::ps_round($product->getPrice(!Product::getTaxCalculationMethod((int)$this->context->cookie->id_customer), null), $compute_precision),
+					'pretax_price' => Tools::ps_round($product->getPrice(false, null), $compute_precision),
 					'weight' => $product->weight,
 					'weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
 					'cover' => isset($product->id) ? Product::getCover((int)$product->id) : '',
