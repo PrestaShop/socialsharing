@@ -45,7 +45,7 @@ class SocialSharing extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Social sharing');
-		$this->description = $this->l('Displays social sharing buttons (Twitter, Facebook, Google+, Pinterest and Vk) on every product page.');
+        $this->description = $this->l('Displays social sharing buttons (Twitter, Facebook, Google+, Pinterest and Vk) on every product page.');
 		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6.99.99');
 	}
 
