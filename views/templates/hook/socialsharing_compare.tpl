@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if $PS_SC_TWITTER || $PS_SC_FACEBOOK || $PS_SC_GOOGLE || $PS_SC_PINTEREST}
+{if $PS_SC_TWITTER || $PS_SC_FACEBOOK || $PS_SC_GOOGLE || $PS_SC_PINTEREST || $PS_SC_VK}
 	<div id="social-share-compare">
 		<p>{l s="Share this comparison with your friends:" mod='socialsharing'}</p>
 		<p class="socialsharing_product">
@@ -44,6 +44,11 @@
 		{if $PS_SC_PINTEREST}
 			<button data-type="pinterest" type="button" class="btn btn-default btn-pinterest social-sharing">
 				<i class="icon-pinterest"></i> {l s="Pinterest" mod='socialsharing'}
+			</button>
+		{/if}
+		{if $PS_SC_VK}
+			<button data-type="vk" type="button" class="btn btn-default btn-vk social-sharing">
+				<i class="icon-vk"></i> {l s="Pinterest" mod='socialsharing'}
 			</button>
 		{/if}
 		</p>

@@ -29,7 +29,7 @@ if (!defined('_PS_VERSION_'))
 
 class SocialSharing extends Module
 {
-	protected static $networks = array('Facebook', 'Twitter', 'Google', 'Pinterest');
+	protected static $networks = array('Facebook', 'Twitter', 'Google', 'Pinterest', 'Vk');
 	protected $html = '';
 
 	public function __construct()
@@ -45,7 +45,7 @@ class SocialSharing extends Module
 		parent::__construct();
 
 		$this->displayName = $this->l('Social sharing');
-		$this->description = $this->l('Displays social sharing buttons (Twitter, Facebook, Google+ and Pinterest) on every product page.');
+        $this->description = $this->l('Displays social sharing buttons (Twitter, Facebook, Google+, Pinterest and Vk) on every product page.');
 		$this->ps_versions_compliancy = array('min' => '1.6', 'max' => '1.6.99.99');
 	}
 
@@ -59,6 +59,7 @@ class SocialSharing extends Module
 		Configuration::updateValue('PS_SC_FACEBOOK', 1);
 		Configuration::updateValue('PS_SC_GOOGLE', 1);
 		Configuration::updateValue('PS_SC_PINTEREST', 1);
+		Configuration::updateValue('PS_SC_VK', 1);
 
 		// The module will add a meta in the product page header and add a javascript file
 		$this->registerHook('header');
@@ -216,7 +217,8 @@ class SocialSharing extends Module
 				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
 				'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
 				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
-				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
+				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST'),
+				'PS_SC_VK' => Configuration::get('PS_SC_VK')
 			));
 		}
 
@@ -244,7 +246,8 @@ class SocialSharing extends Module
 				'PS_SC_TWITTER' => Configuration::get('PS_SC_TWITTER'),
 				'PS_SC_GOOGLE' => Configuration::get('PS_SC_GOOGLE'),
 				'PS_SC_FACEBOOK' => Configuration::get('PS_SC_FACEBOOK'),
-				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST')
+				'PS_SC_PINTEREST' => Configuration::get('PS_SC_PINTEREST'),
+				'PS_SC_VK' => Configuration::get('PS_SC_VK')
 			));
 		}
 
