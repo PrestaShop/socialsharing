@@ -29,6 +29,9 @@
 <meta property="og:description" content="{$meta_description|escape:'html':'UTF-8'}" />
 {if isset($link_rewrite) && isset($cover) && isset($cover.id_image)}
 <meta property="og:image" content="{$link->getImageLink($link_rewrite, $cover.id_image, large_default)}" />
+{assign var=imagesize value=Image::getSize(large_default)}
+<meta property="og:image:width" content="{$imagesize.width}"/>
+<meta property="og:image:height" content="{$imagesize.height}"/>
 {/if}
 {if isset($pretax_price)}
 <meta property="product:pretax_price:amount" content="{$pretax_price}" />
